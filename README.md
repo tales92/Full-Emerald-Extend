@@ -1,159 +1,181 @@
-# EmeraldRecomp — Pokémon Emerald, Recompiled
+<p align="center">
+  <img src="docs/branding/full-emerald.svg" width="330" alt="Full Emerald">
+</p>
 
-> _This recompilation is a **byproduct of developing
-> [gbarecomp](https://github.com/mstan/gbarecomp)** — the games are the proving ground, the framework is the goal.
-> **These are in-development previews, not finished ports — expect rough
-> edges**, and depth will keep landing over months, not days. My time for any
-> one title is limited, so I ask for your patience. Contributions are welcome —
-> testing, issues, and PRs to the game or framework all help and will
-> accelerate this game's polish. More on the why at:
-> [Recomp + AI: 5 Months Later »](https://1379.tech/recomp-ai-5-months-later/)_
+<p align="center">
+  Uma recompilação estática de Pokémon Emerald para PC, com interface própria,
+  suporte completo a controles, mods e ferramentas modernas de preservação.
+</p>
 
-Static recompilation of **Pokémon Emerald** (Game Boy Advance) to native PC, built
-on the [`gbarecomp`](https://github.com/mstan/gbarecomp) framework.
+<p align="center">
+  <img alt="Windows x64" src="https://img.shields.io/badge/plataforma-Windows%20x64-0b7a55?style=flat-square">
+  <img alt="C++20" src="https://img.shields.io/badge/C%2B%2B-20-0b7a55?style=flat-square">
+  <img alt="versão 2.0" src="https://img.shields.io/badge/versão-2.0-e9b701?style=flat-square">
+  <img alt="estado em desenvolvimento" src="https://img.shields.io/badge/estado-em%20desenvolvimento-334155?style=flat-square">
+</p>
 
-Its Gen3 siblings live in
-[`FireRedLeafGreenRecomp`](https://github.com/mstan/FireRedLeafGreenRecomp) (FireRed + LeafGreen) and
-[`RubySapphireRecomp`](https://github.com/mstan/RubySapphireRecomp) (Ruby + Sapphire).
+> [!IMPORTANT]
+> O Full Emerald **não inclui ROM, BIOS, save ou código gerado da ROM**. É
+> necessário usar dumps obtidos legalmente pelo próprio usuário. Atualmente o
+> motor público funciona somente com a revisão específica em português indicada
+> em [Compatibilidade](#compatibilidade). A portabilidade para as demais regiões
+> e idiomas oficiais está em desenvolvimento.
 
-> ### Status — playable bring-up (v0.0.1), and self-improving
->
-> This is a **static-recompilation base + runner**, not a finished port. Emerald
-> **boots through the BIOS intro to the title screen and into gameplay**. It is
-> **early** — not every code path is statically recompiled yet, and content has
-> not been exhaustively tested. (Emerald's RTC and its larger battle/contest engine
-> are the notable deltas from the other Gen3 games.)
->
-> **It gets better the more you play.** Any code path the static recompiler hasn't
-> covered runs through a built-in **interpreter the first time it's hit**, then is
-> **JIT-compiled to native** (in-process, no toolchain needed) and **remembered on
-> disk** — so the next launch runs it natively from the start. Interpreted once,
-> native ever after; coverage grows toward fully-native as the game is played. See
-> [How it self-improves](#how-it-self-improves).
+![Tela inicial atual do Full Emerald 2.0](docs/screenshots/current/launcher-home.png)
 
----
+## O projeto
 
-## Screenshots
+O **Full Emerald** transforma a base experimental
+[`EmeraldRecomp`](https://github.com/mstan/EmeraldRecomp) em uma experiência de
+desktop integrada. O código ARM7TDMI do cartucho é traduzido estaticamente para
+C/C++ pelo [`gbarecomp`](https://github.com/mstan/gbarecomp); o runtime modela o
+hardware do GBA e a interface é construída sobre
+[`recomp-ui`](https://github.com/mstan/recomp-ui).
 
-| Pokémon Emerald — title screen | Pokémon Emerald — a wild encounter |
+O objetivo é parecer um jogo de PC, não uma janela de emulador: primeira
+configuração guiada, launcher clean, menu dentro do jogo, navegação por controle,
+atalhos, estados rápidos, mods e uma experiência portátil.
+
+### O que veio pronto e o que foi criado aqui
+
+- **Base upstream:** tradução estática ARM/Thumb, runtime de GBA, PPU/APU,
+  Flash/RTC, depuração, launcher compartilhado e configuração original do
+  Emerald.
+- **Full Emerald:** identidade e fluxo 2.0, integração launcher/jogo,
+  controle analógico e hot-plug, bindings de teclado e gamepad, turbo com
+  multiplicador, quick save/load, retorno seguro ao launcher, multitelas
+  experimental, infraestrutura de mods e o mod Pokémon Follower.
+- **Referências, sem copiar código:** Gen1Recomp para ideias de experiência,
+  Dusklight para direção de interface e PokePCFollowers para o conceito de
+  seguidor. Consulte [CREDITS.md](CREDITS.md).
+
+Estimativa pelo código manual da stack: aproximadamente **97–98% da fundação**
+veio dos projetos upstream e **2–3%** corresponde às integrações, recursos e
+polimento específicos do Full Emerald. O grande volume de C gerado da ROM não é
+contado como código escrito manualmente e não é versionado.
+
+## Recursos
+
+| Recurso | Estado |
 |---|---|
-| ![Pokémon Emerald — title screen, native recompiled build](docs/screenshots/emerald-title.png) | ![Pokémon Emerald — a wild encounter, running natively](docs/screenshots/emerald-gameplay.png) |
+| Boot, mundo, batalhas, áudio, Flash1M e RTC | Validado nos caminhos testados |
+| Execução strict-static | 0 misses/0 instruções interpretadas nos testes aceitos |
+| Launcher e menu dentro do jogo | Disponível |
+| Teclado, D-pad, analógico, hot-plug e GUID de controle | Disponível |
+| Rebind de botões GBA e atalhos no teclado/controle | Disponível |
+| Turbo segurado, multiplicador 1–16× ou ilimitado | Disponível |
+| Quick Save/Quick Load, 9 slots | Disponível |
+| Pokémon Follower | Mod opcional, desativado por padrão |
+| Multitelas de 1 a 12 instâncias | **Experimental** |
+| Link Cable e multiplayer local por jogadores | Planejado |
+| Outras regiões/idiomas da ROM | Em desenvolvimento; ainda não habilitado |
+| Renderização voxel/3D | Pesquisa futura |
 
-*Native recompiled builds (no emulator), captured running the original ROM.*
+## Interface atual
 
----
+| Configurações | Menu dentro do jogo |
+|---|---|
+| ![Configurações atuais](docs/screenshots/current/launcher-settings.png) | ![Menu atual dentro do jogo](docs/screenshots/current/in-game-menu.png) |
 
-## What "static recompilation" means here
+| Mod Pokémon Follower |
+|---|
+| ![Pokémon seguindo o jogador](docs/screenshots/current/pokemon-follower.png) |
 
-The ROM's **ARM7TDMI machine code is statically translated to native C** — every
-function the game runs becomes a real generated C function. Unlike most recomp
-projects, **the GBA BIOS is recompiled and executed too** (not HLE'd or stubbed),
-so the boot sequence and interrupt/SWI handlers run as real recompiled code. The
-rest of the console — the PPU (graphics), APU + M4A sound engine, DMA, timers, the
-cartridge flash save chip + RTC, and hardware I/O — is modeled by the `gbarecomp`
-runtime.
+As imagens acima representam somente a interface atual da versão 2.0. Capturas
+antigas do protótipo não são usadas nesta página.
 
-Only **symbol metadata** (function names, addresses, sizes) from the
-[`pret/pokeemerald`](https://github.com/pret/pokeemerald) decompilation enters this
-repo — never its C source, build output, or toolchain. **The ROM is never
-redistributed**; you supply your own legally-dumped copy.
+## Compatibilidade
 
-## ROM
+| Alvo | SHA-1 da ROM | CRC32 | Estado |
+|---|---|---|---|
+| Tradução PT-BR Zambrakas (2013, sem Day/Night) | `18a2b0acdba046c71b8677bb58c9ee7d36f7a91f` | `BD826A51` | **Suportado atualmente** |
+| Emerald USA | `f3ae088181bf583e55daf962a92bb46f4f1d07b7` | `1F1C08FB` | Perfil reservado; motor em desenvolvimento |
+| França, Alemanha, Espanha e Japão | — | — | Dumps adquiridos para pesquisa; adaptação e validação pendentes |
 
-| Target          | Game            | ROM (USA) | SHA-1                                      | Debug port |
-|-----------------|-----------------|-----------|-------------------------------------------|------------|
-| `EmeraldRecomp` | Pokémon Emerald | USA       | `f3ae088181bf583e55daf962a92bb46f4f1d07b7` | 19892      |
+O hash é uma barreira de segurança: texto e dados podem mudar entre revisões,
+mas também podem mudar instruções traduzidas. Aceitar outro dump sem gerar e
+validar seu motor poderia executar código incorreto. O plano é manter uma
+interface única que selecione internamente o motor correspondente a cada ROM
+oficial validada.
 
-The runtime **refuses to launch on an unrecognized ROM** — the SHA-1 must match.
+## Como usar
 
-## Quick start
+1. Compile o projeto seguindo [BUILDING.md](BUILDING.md).
+2. Abra `Full Emerald.exe`.
+3. Na primeira execução, selecione a ROM PT-BR reconhecida e um dump de BIOS GBA
+   de 16 KiB obtido do seu próprio hardware.
+4. Configure teclado ou controle e selecione **Play**.
+5. Use o botão Guide/Home para abrir o menu durante o jogo.
 
-1. Download the latest `EmeraldRecomp-windows-x64` zip from
-   [Releases](../../releases) and extract it (or build from source — see below).
-2. Run `EmeraldRecomp`.
-3. Supply your own **legally-obtained** Pokémon Emerald (USA) ROM when prompted.
-   The path is cached next to the exe for future launches.
-4. Play. Early on you may briefly see the interpreter warm up new code paths; once
-   warmed (and cached), they run native.
+O programa guarda apenas os caminhos e as preferências. ROM e BIOS não são
+copiadas para o repositório nem para um pacote público.
 
-## Controls
+### Controles padrão
 
-| GBA button | Keyboard      |
-|------------|---------------|
-| D-Pad      | Arrow keys    |
-| A          | Z             |
-| B          | X             |
-| Start      | Enter         |
-| Select     | Backspace     |
+| Ação | Teclado | Controle SDL |
+|---|---|---|
+| Direções | Setas | D-pad ou analógico esquerdo |
+| A / B | `X` / `Z` | Sul / Leste |
+| L / R | `C` / `V` | Ombros |
+| Start / Select | Enter / Shift direito | Start / Back |
+| Turbo | Tab | Gatilho direito |
+| Quick Save / Quick Load | Shift+F1 / F1 | Configurável |
+| Menu do jogo | — | Guide/Home |
+| Tela cheia | Alt+Enter | Configurável |
 
-Save states: **Shift+F1–F9** save to a slot, **F1–F9** load it.
+Todos os bindings podem ser alterados. Turbo volta imediatamente a 1× ao
+soltar o botão.
 
-## How it self-improves
+## Mods
 
-`gbarecomp`'s coverage is honest: a path that wasn't statically recompiled is
-**bridged through the interpreter** the first time, *loudly*, then healed:
+Pacotes `.gbamod` são arquivos ZIP de dados com manifesto TOML. Eles não podem
+injetar DLLs nem código arbitrário. Comportamentos nativos confiáveis são
+compilados junto do jogo e ativados por IDs declarados no pacote.
 
-- **First hit:** the interpreter runs the missed function (correct, just not
-  native) and the runtime records it.
-- **Heal:** the function is **JIT-compiled to native in-process** via a
-  toolchain-less backend (sljit) — no compiler required on your machine.
-- **Persist:** the healed path is written to a per-ROM cache
-  (`recomp_cache/<rom-sha1>/`), so **the next launch re-JITs it up front** and it
-  runs native from the start.
+O exemplo incluído é **Pokémon Follower**: o primeiro Pokémon saudável e que não
+seja Egg segue o jogador. O código do mod está no repositório, mas o pacote de
+sprites não é redistribuído; gere-o localmente a partir de recursos que você
+tenha permissão para usar. Veja [MODDING.md](MODDING.md).
 
-The result is a game that converges toward fully-native execution the more it's
-played, and **stays** improved across launches. A handful of instruction patterns
-the JIT can't lower yet stay on the interpreter (precision over recall); those are
-emitter gaps that close over time. Self-improvement is on by default; set
-`GBARECOMP_SELFHEAL_RECOMPILE=0` for a pure-interpreter run.
+## Multitelas
 
-## Building from source
+O modo experimental executa até 12 workers isolados em uma janela composta.
+Cada worker mantém seu próprio save, save states e seed de RNG; o supervisor
+distribui o mesmo input e recolhe os framebuffers por memória compartilhada.
 
-**Prerequisites (Windows):** [MSYS2](https://www.msys2.org/) with the mingw64
-toolchain (`gcc`/`g++`), CMake 3.16+, Ninja, and SDL2 (mingw64 package). Builds
-are invoked from PowerShell with the mingw64 toolchain on `PATH`.
+Ele foi criado para testes repetidos e shiny hunting, mas ainda não é tratado
+como multiplayer ou Link Cable. Não confunda sincronização de ritmo com
+igualdade de RNG: as instâncias precisam continuar independentes.
 
-**1. Clone this repo next to `gbarecomp`** (the game repo builds against the
-sibling engine checkout on `main`):
+Detalhes e limitações estão em [ARCHITECTURE.md](ARCHITECTURE.md) e
+[ROADMAP.md](ROADMAP.md).
 
-```
-git clone https://github.com/mstan/gbarecomp.git
-git clone https://github.com/mstan/EmeraldRecomp.git
-cd EmeraldRecomp
-```
+## Desenvolvimento
 
-**2. Supply your ROM** at `variants/emerald/roms/emerald_usa.gba` (SHA-1 above).
-ROMs are gitignored and never committed.
+- [Compilar e testar](BUILDING.md)
+- [Arquitetura](ARCHITECTURE.md)
+- [Criar mods](MODDING.md)
+- [Créditos e proveniência](CREDITS.md)
+- [Licenciamento e avisos legais](LEGAL.md)
+- [Contribuir](CONTRIBUTING.md)
+- [Roadmap](ROADMAP.md)
+- [Política de segurança](SECURITY.md)
 
-**3. Recompile + build.** The committed `variants/emerald/symbols/*.toml` are the
-importer output, so you can regenerate the C and build directly:
+## English summary
 
-```
-# from PowerShell, mingw64 on PATH
-gba_recompile --rom variants/emerald/roms/emerald_usa.gba \
-              --config variants/emerald/symbols/emerald_usa.toml \
-              --out variants/emerald/generated
-cmake -S . -B build -G Ninja
-cmake --build build --target EmeraldRecomp
-```
+Full Emerald is a Windows-oriented static recompilation project built from
+EmeraldRecomp, gbarecomp and recomp-ui. It adds an integrated game-like UI,
+controller-first navigation, configurable keyboard/gamepad bindings, quick
+states, fast-forward, a data/package mod model, an optional Pokémon follower
+and an experimental multi-instance compositor. The current public engine only
+supports one verified Portuguese translation revision; support for other
+official regions/languages is in progress. No ROM, BIOS, save, generated guest
+code or follower sprite pack is distributed.
 
-(`gba_recompile` is built from the `gbarecomp` checkout; see that repo's README.)
-The recompiled translation unit is large — expect a multi-minute compile.
+## Aviso legal
 
-## Legal
-
-This project contains **no copyrighted ROM data, no Nintendo BIOS, and no decomp
-source** — only original recompiler/runtime code and symbol metadata. **You must
-supply your own legally-dumped ROM** (and BIOS, where the runtime requires one).
-Pokémon and Emerald are trademarks of Nintendo / Game Freak / The Pokémon Company;
-this project is an unaffiliated, non-commercial preservation and research effort.
-
----
-
-<p align="center">
-  <sub><b>R.A.I.D. — Retro AI Development</b> · a Discord for AI-assisted retro reverse-engineering, decomp &amp; recomp</sub>
-</p>
-
-<p align="center">
-  <a href="https://discord.gg/Ad9BwSzctP"><img src=".github/raid-discord.png" alt="Join the Retro AI Development (R.A.I.D.) Discord" width="200"></a>
-</p>
+Full Emerald é um projeto comunitário, não comercial e não afiliado à Nintendo,
+Game Freak ou The Pokémon Company. Pokémon e nomes relacionados pertencem aos
+respectivos titulares. A presença pública do código não substitui as licenças
+dos componentes; leia [LEGAL.md](LEGAL.md) antes de redistribuir ou criar
+derivados.

@@ -1,0 +1,37 @@
+name: Source hygiene
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  forbidden-payload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Reject private game data and generated payloads
+        shell: bash
+        run: |
+          set -euo pipefail
+          forbidden="$(find . -path './.git' -prune -o -type f \
+            \( -iname '*.gba' -o -iname '*.agb' -o -iname '*.sav' \
+               -o -iname '*.srm' -o -iname '*.gbas' -o -iname '*.state?' \
+               -o -iname '*.g3fs' -o -name 'rom.cfg' -o -name 'bios.cfg' \) \
+            -print)"
+          if [[ -n "$forbidden" ]]; then
+            printf 'Forbidden payloads found:\n%s\n' "$forbidden"
+            exit 1
+          fi
+          generated="$(find variants -path '*/generated/*' -type f \
+            ! -name README.md -print 2>/dev/null || true)"
+          if [[ -n "$generated" ]]; then
+            printf 'ROM-derived generated files found:\n%s\n' "$generated"
+            exit 1
+          fi
+      - name: Check whitespace
+        run: git show --check --format=fuller --stat HEAD

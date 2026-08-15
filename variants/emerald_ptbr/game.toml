@@ -1,0 +1,34 @@
+# game.toml — Pokemon Emerald PT-BR (Zambrakas, 2013; no day/night patch)
+#
+# ROMs are user-provided and never committed. Paths resolve relative to this
+# directory; --rom and the launcher may select an external legal dump.
+
+[game]
+name           = "Pokemon Emerald Version — PT-BR"
+short_name     = "emerald"
+default_region = "ptbr_zambrakas"
+
+[bios]
+path = "../../gbarecomp/bios/gba_bios.bin"   # user-provided; override via --bios
+sha1 = "300c20df6731a33952ded8c436f7f186d25d3492"
+
+[rom]
+path = "roms/emerald_ptbr_zambrakas.gba"      # user-provided; gitignored
+
+[recompiler]
+entry_point = "0x08000000"
+seeds       = "../emerald/symbols/imported_symbols.tsv"
+boundaries  = "../emerald/symbols/function_boundaries.tsv"
+out_dir     = "generated"
+strict      = true
+
+[save]
+type = "flash1m"
+
+[runtime]
+debug_port   = 19894
+window_title = "Gen3Recomp - Emerald PT-BR"
+
+[functions]
+arm   = []
+thumb = []

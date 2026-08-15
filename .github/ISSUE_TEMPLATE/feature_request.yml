@@ -1,0 +1,28 @@
+name: Feature request
+description: Sugira uma melhoria alinhada ao projeto
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema que a proposta resolve
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposta
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas e riscos
+  - type: checkboxes
+    id: legal
+    attributes:
+      label: Conteúdo
+      options:
+        - label: A proposta não exige distribuir ROM, BIOS ou assets sem licença.
+          required: true
