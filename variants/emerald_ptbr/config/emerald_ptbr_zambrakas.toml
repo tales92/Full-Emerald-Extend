@@ -1,0 +1,12 @@
+# Explicit profile for the Zambrakas PT-BR translation dated 2013-12-08,
+# without the separate day/night patch. Never loosen this identity gate.
+
+[rom]
+sha1  = "18a2b0acdba046c71b8677bb58c9ee7d36f7a91f"
+crc32 = "0xBD826A51"
+
+[save]
+type = "flash1m"
+size = "0x20000"
+
+[quirks]

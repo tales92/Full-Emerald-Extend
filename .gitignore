@@ -3,12 +3,22 @@ variants/*/roms/
 *.gba
 *.GBA
 
+# Optional local box art is presentation-only and may contain copyrighted art.
+variants/*/launcher/*.tga
+
 # Save files
 saves/
 *.sav
 *.srm
 *.fla
 *.flash
+*.gbas
+*.state?
+keybinds.ini
+
+# User-supplied/generated mod art.  The follower pack is built locally from
+# assets the user is allowed to use; it is never redistributed by this repo.
+*.g3fs
 
 # Vendored decomp / reference projects (built in WSL; not committed).
 third_party/
@@ -54,7 +64,7 @@ _*
 *.bak
 *.csv
 *.frag
-recomp_coverage.json
+recomp_coverage*.json
 
 # Local-only config overrides.
 *.local.toml
@@ -79,3 +89,5 @@ memory/
 # README showcase screenshots (override the *.png ignore above)
 !docs/screenshots/
 !docs/screenshots/*.png
+!docs/screenshots/current/
+!docs/screenshots/current/*.png

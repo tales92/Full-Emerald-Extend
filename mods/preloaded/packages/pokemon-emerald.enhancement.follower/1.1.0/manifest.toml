@@ -1,0 +1,24 @@
+format_version = 1
+id = "pokemon-emerald.enhancement.follower"
+version = "1.1.0"
+name = "Pokemon Follower"
+author = "Full Emerald Team"
+description = "Makes the first healthy Pokemon in the party follow the player. Directional sprite assets are supplied or generated locally by the user."
+license = "LicenseRef-User-Supplied-Assets"
+resolver = "declarative"
+save_compatibility = "shared"
+
+[[target]]
+game_id = "pokemon-emerald"
+rom_sha1 = "18a2b0acdba046c71b8677bb58c9ee7d36f7a91f"
+
+[[feature]]
+id = "follower"
+name = "Pokemon Follower"
+description = "Show the first healthy non-Egg party Pokemon one step behind the player."
+group = "Gameplay"
+default_enabled = false
+
+[[plugin]]
+feature = "follower"
+id = "pokemon-emerald.follower"

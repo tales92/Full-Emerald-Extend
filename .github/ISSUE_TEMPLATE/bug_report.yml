@@ -1,0 +1,46 @@
+name: Bug report
+description: Relate um problema reproduzível do Full Emerald
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: "Nunca anexe ROM, BIOS, save pessoal ou token."
+  - type: input
+    id: version
+    attributes:
+      label: Versão ou commit
+      placeholder: "2.0.0 / abc1234"
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área
+      options:
+        - Jogo normal
+        - Launcher/interface
+        - Controle/input
+        - Pokémon Follower
+        - Multitelas
+        - Build/instalação
+        - Outro
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Passos para reproduzir
+      description: Diga o que fez, o que esperava e o que aconteceu.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Ambiente
+      description: Windows, CPU/GPU, controle e quantidade de telas.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs sanitizados
+      render: shell
