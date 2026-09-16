@@ -4,5 +4,5 @@
 	branch = full-emerald
 [submodule "gbarecomp"]
 	path = gbarecomp
-	url = https://github.com/ExtremestoneGG/gbarecomp.git
-	branch = full-emerald
+	url = https://github.com/tales92/gbarecomp.git
+	branch = fix/config-persistence
